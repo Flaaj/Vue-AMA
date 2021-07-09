@@ -8,6 +8,7 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "@types/uuidv4": "^5.0.0",
     "core-js": "^3.6.5",
     "node-fetch": "^2.6.1",
     "uuid": "^8.3.2",
