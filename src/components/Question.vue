@@ -9,7 +9,7 @@
         <p class="answer" v-if="answerStatus === ANSWER.EXISTS">
             <span class="label">Answer:</span> {{ data.answer }}
         </p>
-        <div class="answer-wrapper">
+        <div v-else class="answer-wrapper">
             <button
                 class="btn"
                 v-if="answerStatus === ANSWER.DOESNT_EXIST"
@@ -37,7 +37,7 @@
 <script>
 /* eslint-disable */
 import { defineComponent } from "@vue/runtime-core";
-import { answerQuestion, deleteQuestion } from "@/api";
+import { answerQuestion, deleteQuestion } from "@/services/firebase.service";
 
 export default defineComponent({
     props: ["data"],

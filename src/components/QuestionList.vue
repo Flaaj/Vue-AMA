@@ -25,7 +25,7 @@
 
 <script>
 /* eslint-disable */
-import { postQuestion, answerQuestion, getQuestions } from "@/api";
+import { postQuestion, answerQuestion, getQuestions } from "@/services/firebase.service";
 import { defineComponent } from "@vue/runtime-core";
 import Question from "./Question.vue";
 

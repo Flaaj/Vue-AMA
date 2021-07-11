@@ -1,11 +1,26 @@
 import { v4 as uuid } from "uuid";
-
+import { QuestionObject } from "@/QuestionObject.type";
+import firebase from "firebase/app";
+import "firebase/auth";
+import "firebase/database";
+import FirebaseConfig from "@/firebase.config.json";
+import Store from "@/store/";
 const url = "http://localhost:3000/questions/";
 
-type MessageObject = {
-    id: string;
-    question: string;
-    answer?: string;
+export const connectFirebase = async () => {
+    const response = await firebase.initializeApp(FirebaseConfig);
+    Store.dispatch("addFirebase", firebase);
+};
+
+export const getQuestionsFromFirebase = async () => {
+    const response = await firebase.database().ref("questions").get();
+    const data = await response;
+    if (data.exists()) {
+        const questions = data.val();
+        Store.dispatch("getQuestions", questions);
+    } else {
+        Store.dispatch("getQuestions", {});
+    }
 };
 
 export const postQuestion = async (question: string) => {
@@ -21,7 +36,7 @@ export const postQuestion = async (question: string) => {
         method: "POST",
         body: JSON.stringify(body),
     });
-    const data: MessageObject = await response.json();
+    const data: QuestionObject = await response.json();
     return data;
 };
 
@@ -42,7 +57,7 @@ export const getQuestions = async () => {
 
 export const answerQuestion = async (
     questionID: string,
-    body: MessageObject
+    body: QuestionObject
 ) => {
     const questionURL = url + questionID;
     const response = await fetch(questionURL, {
