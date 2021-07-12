@@ -1,15 +1,15 @@
 <template>
     <div class="ama">
         <h1 class="heading">Ask me anything!</h1>
-        <form class="ama__form" @submit.prevent="askQuestion">
+        <form class="form" @submit.prevent="askQuestion">
             <input
-                class="ama__input"
+                class="input"
                 v-model="questionInput"
                 placeholder="Ask a question"
             />
             <Button text="Ask" />
         </form>
-        <div class="ama__list" v-if="questions">
+        <div class="list" v-if="questions">
             <Question
                 v-for="question of questions"
                 v-bind:key="question.id"
@@ -36,11 +36,22 @@ export default defineComponent({
         };
     },
     computed: mapState({
-        questions: (state) => state.questions,
+        userID(state) {
+            const idFromRoute =
+                this.$router.currentRoute.value.path.split("/")[2];
+            if (idFromRoute) return idFromRoute;
+            else if (state.logged) return state.loggedUser.uid;
+            return "";
+        },
+        questions(state) {
+            return state.questions.filter(
+                (question) => question.askedTo === this.userID
+            );
+        },
     }),
     methods: {
         askQuestion() {
-            database.postQuestion(this.questionInput);
+            database.postQuestion(this.questionInput, this.userID);
         },
     },
     components: {
@@ -56,11 +67,11 @@ export default defineComponent({
     display: flex;
     flex-direction: column;
 
-    &__form {
+    .form {
         margin: 10px auto;
     }
 
-    &__input {
+    .input {
         height: 22px;
         border-radius: 10px;
         min-width: 200px;

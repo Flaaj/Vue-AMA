@@ -1,9 +1,9 @@
 <template>
-    <div class="login">
-        <h2 class="heading">Login</h2>
-        <form class="form">
-            <label class="label" for="login">Login:</label>
-            <input class="input" id="login" type="text" v-model="login" />
+    <div class="create-account">
+        <h2 class="heading">New account</h2>
+        <form class="form" @submit.prevent="onSubmit">
+            <label class="label" for="login">Email:</label>
+            <input class="input" id="login" type="text" v-model="email" />
             <label class="label" for="password">Password:</label>
             <input
                 class="input"
@@ -11,7 +11,7 @@
                 type="password"
                 v-model="password"
             />
-            <Button text="Submit" />
+            <Button text="SUBMIT" />
         </form>
     </div>
 </template>
@@ -26,13 +26,13 @@ import database from "@/services/firebase.service";
 export default {
     data() {
         return {
-            login: "",
+            email: "",
             password: "",
         };
     },
     methods: {
         onSubmit() {
-            database.logIn(this.login, this.password);
+            database.createUser(this.email, this.password);
         },
     },
     components: {
@@ -42,7 +42,7 @@ export default {
 </script>
 
 <style scoped lang="scss">
-.login {
+.create-account {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -55,9 +55,23 @@ export default {
         flex-direction: column;
     }
 
+    .input {
+        margin: 10px 20px;
+        display: block;
+        height: 20px;
+        border: none;
+        border-bottom: 1px solid black;
+        padding-left: 20px;
+
+        &:focus {
+            border-bottom: 2px solid black;
+            outline: none;
+        }
+    }
+
     .btn {
-        margin-top: 10px;
-        max-width: 200px;
+        margin: 30px auto 20px;
+        width: 200px;
     }
 }
 </style>

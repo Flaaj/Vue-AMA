@@ -9,7 +9,9 @@ import database from "@/services/firebase.service";
 export default defineComponent({
     mounted() {
         database.connect();
+        database.authStateListener();
         database.getQuestions();
+        database.getUsers();
     },
 });
 </script>

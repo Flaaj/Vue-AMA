@@ -8,7 +8,11 @@ export default {
     props: ["text"],
     methods: {
         onClick: () => {
-            this.$emit("submitHandler");
+            try {
+                this.$emit("submitHandler");
+            } catch (err) {
+                console.log(err);
+            }
         },
     },
 };

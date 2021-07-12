@@ -3,23 +3,23 @@ import firebase from "firebase/app";
 import "firebase/auth";
 import "firebase/database";
 
-import Store from "@/store/";
-
-const questions = (questionID?: string) => {
-    if (questionID)
-        return firebase.database().ref("questions").child(questionID);
-    else return firebase.database().ref("questions");
-};
+import Store from "@/store";
 
 export default {
-    connect: () => {
+    connect() {
         if (!Store.state.appInitialized) {
             firebase.initializeApp(FirebaseConfig);
             Store.dispatch("addFirebase", firebase);
         }
     },
 
-    getQuestions: () => {
+    authStateListener() {
+        firebase.auth().onAuthStateChanged((user) => {
+            Store.dispatch('login', user);
+        })
+    },
+
+    getQuestions() {
         questions().on("value", (snapshot) => {
             if (snapshot.exists()) {
                 let questions = snapshot.val();
@@ -36,31 +36,66 @@ export default {
         });
     },
 
-    postQuestion: (question: string) => {
-        questions().push({ question });
+    postQuestion(question: string, askedTo: string) {
+        questions().push({ question, askedTo });
     },
 
-    postAnswer: (questionID: string, answer: string) => {
+    postAnswer(questionID: string, answer: string) {
         questions(questionID).update({ answer });
     },
 
-    deleteQuestion: (questionID: string) => {
+    deleteQuestion(questionID: string) {
         questions(questionID).remove();
     },
 
-    logIn: (email: string, password: string) => {
+    login(email: string, password: string) {
         firebase
             .auth()
             .signInWithEmailAndPassword(email, password)
-            .then(({ user }) => console.log(user))
-            .catch(err => console.log(err));
+            .then(({ user }) => Store.dispatch("login", user))
+            .catch((err) => console.log(err));
     },
 
-    createUser: (email: string, password: string) => {
+    createUser(email: string, password: string) {
         firebase
             .auth()
             .createUserWithEmailAndPassword(email, password)
-            .then(({ user }) => console.log(user))
-            .catch(err => console.log(err));
+            .then(({ user }) => {
+                addUser(email, user ? user.uid : "");
+                Store.dispatch("login", user);
+            })
+            .catch((err) => console.log(err));
     },
+
+    getUsers() {
+        users().on("value", (snapshot) => {
+            if (snapshot.exists()) {
+                let users = snapshot.val();
+
+                users = Object.entries(users).map(([key, value]) => ({
+                    id: key,
+                    ...(value as Record<string, string>),
+                }));
+                Store.dispatch("getUsers", users);
+            } else {
+                Store.dispatch("getUsers", {});
+            }
+        });
+    },
+};
+
+const addUser = (email: string, userID: string) => {
+    const user = { email };
+    users(userID).set(user);
+};
+
+const questions = (questionID?: string) => {
+    if (questionID)
+        return firebase.database().ref("questions").child(questionID);
+    else return firebase.database().ref("questions");
+};
+
+const users = (userID?: string) => {
+    if (userID) return firebase.database().ref("users").child(userID);
+    else return firebase.database().ref("users");
 };

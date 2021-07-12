@@ -13,11 +13,14 @@ import LoginForm from "@/components/LoginForm.vue";
 
 export default {
     computed: mapState({
-        logged: (state) => (state.logged ? "logged" : "not logged"),
+        userAlreadyLogged: (state) => state.logged,
     }),
     components: {
         Layout,
         LoginForm,
+    },
+    mounted() {
+        if (this.userAlreadyLogged) this.$router.push("/");
     },
 };
 </script>

@@ -26,5 +26,7 @@ export default {
 .content {
     height: calc(100vh - 80px);
     max-height: 1400px;
+    display: flex;
+    flex-direction: column;
 }
 </style>

@@ -1,5 +1,5 @@
 <template>
-    <div class="question-wrapper">
+    <div class="wrapper">
         <p class="question">
             <span class="label">Question:</span> {{ questionData.question }}
             <button class="delete" v-on:click="deleteThisQuestion">
@@ -83,12 +83,12 @@ export default defineComponent({
 </script>
 
 <style scoped lang="scss">
+.wrapper {
+    display: flex;
+    flex-direction: column;
+    box-shadow: -10px 0px 0 -9px black;
+}
 .question {
-    &-wrapper {
-        display: flex;
-        flex-direction: column;
-        box-shadow: -10px 0px 0 -9px black;
-    }
     font-weight: bold;
     padding-top: 5px;
     padding-left: 10px;
@@ -96,12 +96,6 @@ export default defineComponent({
     margin-top: 0px;
     margin-bottom: 7px;
     position: relative;
-
-    &:hover {
-        .delete {
-            color: red;
-        }
-    }
 
     .delete {
         position: absolute;
@@ -111,6 +105,12 @@ export default defineComponent({
         color: transparent;
         cursor: pointer;
         transition: 0.5s;
+    }
+
+    &:hover {
+        .delete {
+            color: red;
+        }
     }
 }
 .answer {

@@ -1,54 +1,55 @@
 import { createStore } from "vuex";
-import { QuestionObject } from "@/QuestionObject.interface";
+import { State } from "@/interfaces/State.interface"
+import { Question } from "@/interfaces/Question.interface";
+import { User } from "@/interfaces/User.interface";
 import firebase from "firebase/app";
 
-interface State {
-  firebase?: firebase.app.App;
-  appInitialized: boolean;
-  logged: boolean;
-  user?: any;
-  questions: QuestionObject[]
-}
 
 export default createStore<State>({
   state: {
     firebase: undefined,
     appInitialized: false,
     logged: false,
-    user: undefined,
+    loggedUser: undefined,
     questions: [],
+    users: [],
   },
   mutations: {
     addFirebase(state, firebase: firebase.app.App) {
       state.firebase = firebase;
       state.appInitialized = true;
     },
-    logIn(state, user: any) {
+    login(state, user: firebase.User) {
       state.logged = true;
-      state.user = user;
+      state.loggedUser = user;
     },
-    logOut(state) {
+    logout(state) {
       state.logged = false;
-      state.user = undefined;
+      state.loggedUser = undefined;
     },
-    getQuestions(state, questions: QuestionObject[]) {
+    getQuestions(state, questions: Question[]) {
       state.questions = questions;
-
     },
+    getUsers(state, users: User[]) {
+      state.users = users;
+    }
   },
   actions: {
     addFirebase(context, firebase: firebase.app.App) {
       context.commit('addFirebase', firebase);
     },
-    logIn(context) {
-      context.commit('logIn');
+    login(context, user: firebase.User) {
+      context.commit('login', user);
     },
-    logOut(context) {
-      context.commit('logOut');
+    logout(context) {
+      context.commit('logout');
     },
-    getQuestions(context, questions: QuestionObject[]) {
+    getQuestions(context, questions: Question[]) {
       context.commit('getQuestions', questions);
     },
+    getUsers(context, users: User[]) {
+      context.commit('getUsers', users);
+    }
 
   },
   modules: {},

@@ -4,11 +4,13 @@ import Login from "../views/Login.vue";
 import MyWall from "../views/MyWall.vue";
 import Users from "../views/Users.vue";
 import NewAccount from "../views/NewAccount.vue"
+import Account from "../views/Account.vue"
+import AnotherUser from "../views/AnotherUser.vue";
 
 const routes: Array<RouteRecordRaw> = [
   {
     path: "/",
-    name: "Home",
+    name: "Questions",
     component: Home,
   },
   {
@@ -17,20 +19,27 @@ const routes: Array<RouteRecordRaw> = [
     component: Login,
   },
   {
-    path: "/my-wall",
-    name: "My wall",
-    component: MyWall,
-  },
-  {
     path: "/users",
     name: "Users",
     component: Users,
   },
   {
+    path: "/users/:id",
+    name: "Another User",
+    component: Home,
+  },
+  {
     path: "/new-account",
     name: "New account",
     component: NewAccount,
-  }
+  },
+  {
+    path: "/account",
+    name: "Account",
+    component: Account,
+  },
+
+
 ];
 
 const router = createRouter({

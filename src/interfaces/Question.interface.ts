@@ -1,4 +1,4 @@
-export interface QuestionObject {
+export interface Question {
     id: string;
     question: string;
     answer?: string;

@@ -44,7 +44,6 @@ export default {
 
     &__item {
         width: calc(33.33% - 3px);
-        padding: 27px 0;
         background-color: #353535;
         transition: 0.5s;
         border-radius: 5px;
@@ -53,6 +52,7 @@ export default {
             background-color: #222;
         }
         a {
+            padding: 27px 0;
             width: 100%;
             display: inline-block;
             text-align: center;

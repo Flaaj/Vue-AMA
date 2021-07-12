@@ -1,14 +1,12 @@
 <template>
-    <Layout>
-        <LoginForm />
-    </Layout>
+    <Layout> </Layout>
 </template>
 
 <script>
+/* eslint-disable */
 import { mapState } from "vuex";
 
 import Layout from "@/layouts/Layout.vue";
-import LoginForm from "@/components/LoginForm.vue";
 
 export default {
     computed: mapState({
@@ -16,7 +14,6 @@ export default {
     }),
     components: {
         Layout,
-        LoginForm,
     },
 };
 </script>
