@@ -5,7 +5,6 @@
 </template>
 
 <script>
-/* eslint-disable */
 import { mapState } from "vuex";
 
 import Layout from "@/layouts/Layout.vue";

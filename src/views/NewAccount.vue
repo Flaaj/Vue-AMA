@@ -1,6 +1,6 @@
 <template>
     <Layout>
-        <LoginForm />
+        <NewAccount />
     </Layout>
 </template>
 
@@ -9,7 +9,7 @@
 import { mapState } from "vuex";
 
 import Layout from "@/layouts/Layout.vue";
-import LoginForm from "@/components/LoginForm.vue";
+import NewAccount from "@/components/NewAccountForm.vue";
 
 export default {
     computed: mapState({
@@ -17,7 +17,7 @@ export default {
     }),
     components: {
         Layout,
-        LoginForm,
+        NewAccount,
     },
 };
 </script>

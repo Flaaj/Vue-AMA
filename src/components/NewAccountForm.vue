@@ -2,7 +2,7 @@
     <div class="login">
         <h2 class="heading">Login</h2>
         <form class="form">
-            <label class="label" type="email" for="login">Email:</label>
+            <label class="label" for="login">Login:</label>
             <input class="input" id="login" type="text" v-model="login" />
             <label class="label" for="password">Password:</label>
             <input
@@ -11,12 +11,8 @@
                 type="password"
                 v-model="password"
             />
-            <Button text="log in" />
+            <Button text="Submit" />
         </form>
-        <div class="no-account">
-            Don't have an account?
-            <router-link to="/new-account">Make one</router-link>
-        </div>
     </div>
 </template>
 
@@ -59,23 +55,9 @@ export default {
         flex-direction: column;
     }
 
-    .input {
-        margin: 10px 20px;
-        display: block;
-        height: 20px;
-        border: none;
-        border-bottom: 1px solid black;
-        padding-left: 20px;
-
-        &:focus {
-            border-bottom: 2px solid black;
-            outline: none;
-        }
-    }
-
     .btn {
-        margin: 30px auto 20px;
-        width: 200px;
+        margin-top: 10px;
+        max-width: 200px;
     }
 }
 </style>

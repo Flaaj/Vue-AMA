@@ -1,8 +1,10 @@
 import { createStore } from "vuex";
-import { QuestionObject } from "@/QuestionObject.type";
+import { QuestionObject } from "@/QuestionObject.interface";
+import firebase from "firebase/app";
 
-type State = {
-  firebase?: any;
+interface State {
+  firebase?: firebase.app.App;
+  appInitialized: boolean;
   logged: boolean;
   user?: any;
   questions: QuestionObject[]
@@ -11,14 +13,15 @@ type State = {
 export default createStore<State>({
   state: {
     firebase: undefined,
+    appInitialized: false,
     logged: false,
     user: undefined,
     questions: [],
   },
   mutations: {
-    addFirebase(state, firebase: any) {
-      console.log("Adding firebase to store")
+    addFirebase(state, firebase: firebase.app.App) {
       state.firebase = firebase;
+      state.appInitialized = true;
     },
     logIn(state, user: any) {
       state.logged = true;
@@ -32,12 +35,9 @@ export default createStore<State>({
       state.questions = questions;
 
     },
-    addQuestion(state, question: QuestionObject) {
-      state.questions.push(question);
-    }
   },
   actions: {
-    addFirebase(context, firebase: any) {
+    addFirebase(context, firebase: firebase.app.App) {
       context.commit('addFirebase', firebase);
     },
     logIn(context) {
@@ -47,10 +47,7 @@ export default createStore<State>({
       context.commit('logOut');
     },
     getQuestions(context, questions: QuestionObject[]) {
-      context.commit('addQuestion', questions);
-    },
-    addQuestion(context, question: QuestionObject) {
-      context.commit('addQuestion', question);
+      context.commit('getQuestions', questions);
     },
 
   },

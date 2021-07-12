@@ -1,17 +1,14 @@
 <template>
     <Layout>
-        <QuestionList />
     </Layout>
 </template>
 
 <script>
 import Layout from "@/layouts/Layout.vue";
-import QuestionList from "@/components/QuestionList.vue";
 
 export default {
     components: {
         Layout,
-        QuestionList,
     },
 };
 </script>

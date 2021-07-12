@@ -1,23 +1,19 @@
 <template>
     <div class="ama">
         <h1 class="heading">Ask me anything!</h1>
-        <form
-            class="ama__form"
-            @submit.prevent="() => askQuestion(questionInput)"
-        >
+        <form class="ama__form" @submit.prevent="askQuestion">
             <input
                 class="ama__input"
                 v-model="questionInput"
                 placeholder="Ask a question"
             />
-            <button class="ama__submit" type="submit">Ask</button>
+            <Button text="Ask" />
         </form>
         <div class="ama__list" v-if="questions">
             <Question
                 v-for="question of questions"
                 v-bind:key="question.id"
-                :data="question"
-                v-on:updateQuestions="updateQuestions"
+                :questionData="question"
             />
         </div>
     </div>
@@ -25,47 +21,31 @@
 
 <script>
 /* eslint-disable */
-import { postQuestion, answerQuestion, getQuestions } from "@/services/firebase.service";
 import { defineComponent } from "@vue/runtime-core";
-import Question from "./Question.vue";
+import { mapState } from "vuex";
+// components
+import Question from "@/components/Question.vue";
+import Button from "@/components/Button.vue";
+// database service:
+import database from "@/services/firebase.service";
 
 export default defineComponent({
     data() {
         return {
-            questions: [],
             questionInput: "",
         };
     },
-    async mounted() {
-        this.questions = await getQuestions();
-    },
+    computed: mapState({
+        questions: (state) => state.questions,
+    }),
     methods: {
-        async updateQuestions() {
-            console.log("updated");
-            const questions = await getQuestions();
-            console.log(questions);
-
-            this.questions = questions;
-        },
-        async askQuestion(question) {
-            const response = await postQuestion(question);
-            if (response.error) {
-                console.log(
-                    "Error: code",
-                    response.status,
-                    response.statusText
-                );
-            } else {
-                this.questions = await getQuestions();
-                this.questionInput = "";
-            }
-        },
-        async answer(questionID, answer) {
-            const data = await answerQuestion(questionID, answer);
+        askQuestion() {
+            database.postQuestion(this.questionInput);
         },
     },
     components: {
         Question,
+        Button,
     },
 });
 </script>
@@ -73,19 +53,11 @@ export default defineComponent({
 <style scoped lang="scss">
 .ama {
     width: 100%;
-    max-width: 600px;
-    margin: 0 auto;
     display: flex;
     flex-direction: column;
 
     &__form {
         margin: 10px auto;
-    }
-
-    &__list {
-        border-bottom: 2px solid black;
-        border-left: 2px solid black;
-        border-right: 2px solid black;
     }
 
     &__input {
@@ -96,16 +68,6 @@ export default defineComponent({
         padding: 0 20px 0 20px;
         border-color: black;
         outline: none;
-    }
-
-    &__submit {
-        height: 26px;
-        padding: 0 20px;
-        border-radius: 10px;
-        border: none;
-        background-color: forestgreen;
-        color: white;
-        cursor: pointer;
     }
 }
 

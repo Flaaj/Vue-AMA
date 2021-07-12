@@ -4,15 +4,12 @@
 
 <script>
 import { defineComponent } from "@vue/runtime-core";
-import {
-    connectFirebase,
-    getQuestionsFromFirebase,
-} from "@/services/firebase.service";
+import database from "@/services/firebase.service";
 
 export default defineComponent({
     mounted() {
-        connectFirebase();
-        getQuestionsFromFirebase();
+        database.connect();
+        database.getQuestions();
     },
 });
 </script>
@@ -23,5 +20,13 @@ export default defineComponent({
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     color: #2c3e50;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
 }
 </style>

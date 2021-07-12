@@ -1,100 +1,66 @@
-import { v4 as uuid } from "uuid";
-import { QuestionObject } from "@/QuestionObject.type";
+import FirebaseConfig from "@/firebase.config.json";
 import firebase from "firebase/app";
 import "firebase/auth";
 import "firebase/database";
-import FirebaseConfig from "@/firebase.config.json";
+
 import Store from "@/store/";
-const url = "http://localhost:3000/questions/";
 
-export const connectFirebase = async () => {
-    const response = await firebase.initializeApp(FirebaseConfig);
-    Store.dispatch("addFirebase", firebase);
+const questions = (questionID?: string) => {
+    if (questionID)
+        return firebase.database().ref("questions").child(questionID);
+    else return firebase.database().ref("questions");
 };
 
-export const getQuestionsFromFirebase = async () => {
-    const response = await firebase.database().ref("questions").get();
-    const data = await response;
-    if (data.exists()) {
-        const questions = data.val();
-        Store.dispatch("getQuestions", questions);
-    } else {
-        Store.dispatch("getQuestions", {});
-    }
-};
+export default {
+    connect: () => {
+        if (!Store.state.appInitialized) {
+            firebase.initializeApp(FirebaseConfig);
+            Store.dispatch("addFirebase", firebase);
+        }
+    },
 
-export const postQuestion = async (question: string) => {
-    const id = uuid();
-    const body = {
-        id,
-        question,
-        answer: "",
-    };
+    getQuestions: () => {
+        questions().on("value", (snapshot) => {
+            if (snapshot.exists()) {
+                let questions = snapshot.val();
 
-    const response = await fetch(url, {
-        headers: { "Content-Type": "application/json" },
-        method: "POST",
-        body: JSON.stringify(body),
-    });
-    const data: QuestionObject = await response.json();
-    return data;
-};
+                questions = Object.entries(questions).map(([key, value]) => ({
+                    id: key,
+                    ...(value as Record<string, string>),
+                }));
 
-export const getQuestions = async () => {
-    const response = await fetch(url);
-    if (response.ok) {
-        const questions = await response.json();
-        return questions;
-    } else {
-        const { status, statusText } = response;
-        return {
-            error: true,
-            status,
-            statusText,
-        };
-    }
-};
+                Store.dispatch("getQuestions", questions);
+            } else {
+                Store.dispatch("getQuestions", {});
+            }
+        });
+    },
 
-export const answerQuestion = async (
-    questionID: string,
-    body: QuestionObject
-) => {
-    const questionURL = url + questionID;
-    const response = await fetch(questionURL, {
-        headers: { "Content-Type": "application/json" },
-        method: "PUT",
-        body: JSON.stringify(body),
-    });
-    console.log(response);
+    postQuestion: (question: string) => {
+        questions().push({ question });
+    },
 
-    if (response.ok) {
-        const question = await response.json();
-        return question;
-    } else {
-        const { status, statusText } = response;
-        return {
-            error: true,
-            status,
-            statusText,
-        };
-    }
-};
+    postAnswer: (questionID: string, answer: string) => {
+        questions(questionID).update({ answer });
+    },
 
-export const deleteQuestion = async (questionID: string) => {
-    const questionURL = url + questionID;
-    const response = await fetch(questionURL, {
-        headers: { "Content-Type": "application/json" },
-        method: "DELETE",
-    });
-    if (response.ok) {
-        console.log(response);
-        return "";
-    } else {
-        const { status, statusText } = response;
-        return {
-            error: true,
-            status,
-            statusText,
-        };
-    }
+    deleteQuestion: (questionID: string) => {
+        questions(questionID).remove();
+    },
+
+    logIn: (email: string, password: string) => {
+        firebase
+            .auth()
+            .signInWithEmailAndPassword(email, password)
+            .then(({ user }) => console.log(user))
+            .catch(err => console.log(err));
+    },
+
+    createUser: (email: string, password: string) => {
+        firebase
+            .auth()
+            .createUserWithEmailAndPassword(email, password)
+            .then(({ user }) => console.log(user))
+            .catch(err => console.log(err));
+    },
 };

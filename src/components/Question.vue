@@ -1,13 +1,13 @@
 <template>
-    <div class="question-wrapper" v-if="data">
+    <div class="question-wrapper">
         <p class="question">
-            <span class="label">Question:</span> {{ data.question }}
+            <span class="label">Question:</span> {{ questionData.question }}
             <button class="delete" v-on:click="deleteThisQuestion">
                 <i class="fa fa-trash" aria-hidden="true"></i>
             </button>
         </p>
         <p class="answer" v-if="answerStatus === ANSWER.EXISTS">
-            <span class="label">Answer:</span> {{ data.answer }}
+            <span class="label">Answer:</span> {{ questionData.answer }}
         </p>
         <div v-else class="answer-wrapper">
             <button
@@ -28,7 +28,7 @@
                     placeholder="Write your answer here"
                     v-model="answerInput"
                 />
-                <button class="btn" type="submit">Add answer</button>
+                <Button text="Add answer" />
             </form>
         </div>
     </div>
@@ -37,10 +37,13 @@
 <script>
 /* eslint-disable */
 import { defineComponent } from "@vue/runtime-core";
-import { answerQuestion, deleteQuestion } from "@/services/firebase.service";
+// components
+import Button from "@/components/Button.vue";
+// database service
+import database from "@/services/firebase.service";
 
 export default defineComponent({
-    props: ["data"],
+    props: ["questionData"],
     data() {
         return {
             ANSWER: {
@@ -53,7 +56,10 @@ export default defineComponent({
         };
     },
     mounted() {
-        if (this.data.answer !== "") {
+        if (
+            this.questionData.answer !== undefined &&
+            this.questionData.answer !== ""
+        ) {
             this.answerStatus = this.ANSWER.EXISTS;
         }
     },
@@ -61,26 +67,17 @@ export default defineComponent({
         startAnswering() {
             this.answerStatus = this.ANSWER.IN_PROGRESS;
         },
-        async submitAnswer() {
-            if (this.answerInput.length >= 2) {
-                const body = {
-                    id: this.data.id,
-                    question: this.data.question,
-                    answer: this.answerInput,
-                };
-                const response = await answerQuestion(this.data.id, body);
-                if (!response.error) {
-                    this.$emit("updateQuestions");
-                    this.answerStatus = this.ANSWER.EXISTS;
-                }
-            }
+        submitAnswer() {
+            if (this.answerInput.length < 2) return;
+            database.postAnswer(this.questionData.id, this.answerInput);
+            this.answerStatus = this.ANSWER.EXISTS;
         },
-        async deleteThisQuestion() {
-            const response = await deleteQuestion(this.data.id);
-            if (!response.error) {
-                this.$emit("updateQuestions");
-            }
+        deleteThisQuestion() {
+            database.deleteQuestion(this.questionData.id);
         },
+    },
+    components: {
+        Button,
     },
 });
 </script>
@@ -90,14 +87,14 @@ export default defineComponent({
     &-wrapper {
         display: flex;
         flex-direction: column;
+        box-shadow: -10px 0px 0 -9px black;
     }
     font-weight: bold;
-    border-top: 2px solid black;
     padding-top: 5px;
     padding-left: 10px;
     padding-right: 40px;
     margin-top: 0px;
-    margin-bottom: 10px;
+    margin-bottom: 7px;
     position: relative;
 
     &:hover {
@@ -136,17 +133,5 @@ export default defineComponent({
     padding: 0 20px 0 20px;
     border-color: black;
     outline: none;
-}
-
-.btn {
-    height: 26px;
-    padding: 0 20px;
-    border-radius: 10px;
-    border: none;
-    background-color: forestgreen;
-    color: white;
-    cursor: pointer;
-    margin-bottom: 10px;
-    margin-top: -5px;
 }
 </style>
