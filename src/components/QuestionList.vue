@@ -60,7 +60,6 @@ export default defineComponent({
             return state.logged && state.loggedUser.uid === this.userID;
         },
         user(state) {
-            console.log(state.users.find((user) => user.id === this.userID));
             return state.users.find((user) => user.id === this.userID);
         },
     }),

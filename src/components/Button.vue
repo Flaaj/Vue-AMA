@@ -7,7 +7,7 @@
 export default {
     props: ["text"],
     methods: {
-        onClick: () => {
+        onClick() {
             try {
                 this.$emit("submitHandler");
             } catch (err) {

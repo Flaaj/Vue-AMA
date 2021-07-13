@@ -19,6 +19,7 @@ export default {
     },
     methods: {
         logout() {
+            console.log("x")
             database.logout();
         },
     },
