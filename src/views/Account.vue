@@ -1,7 +1,7 @@
 <template>
     <Layout>
         <div class="account">
-            <Button text="Logout" :submitHandler="logout" />
+            <Button text="Logout" v-on:click="logout" />
         </div>
     </Layout>
 </template>
@@ -19,8 +19,8 @@ export default {
     },
     methods: {
         logout() {
-            console.log("x")
             database.logout();
+            this.$router.push("/users")
         },
     },
 };

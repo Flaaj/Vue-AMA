@@ -88,7 +88,7 @@ export default defineComponent({
     computed: mapState({
         userID(state) {
             const idFromRoute =
-                this.$router.currentRoute.value.path.split("/")[2];
+                this.$route.path.split("/")[2];
             if (idFromRoute) return idFromRoute.replace("}", "");
             if (state.logged) return state.loggedUser.uid;
             return "";
@@ -97,7 +97,7 @@ export default defineComponent({
             return state.logged;
         },
         isCurrentUser(state) {
-            return this.questionData.id === this.userID;
+            return this.isLogged && state.loggedUser.uid === this.userID;
         },
     }),
     components: {

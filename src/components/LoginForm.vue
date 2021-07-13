@@ -1,5 +1,6 @@
 <template>
     <div class="login">
+        <div class="hidden">{{ logged }}</div>
         <h2 class="heading">Login</h2>
         <form class="form" @submit.prevent="onSubmit">
             <label class="label" type="email" for="login">Email:</label>
@@ -15,13 +16,16 @@
         </form>
         <div class="no-account">
             Don't have an account?
-            <router-link to="/new-account" class="router-link">Make one</router-link>
+            <router-link to="/new-account" class="router-link"
+                >Make one</router-link
+            >
         </div>
     </div>
 </template>
 
 <script>
 /* eslint-disable */
+import { mapState } from "vuex";
 // components:
 import Button from "@/components/Button.vue";
 // database service:
@@ -35,13 +39,19 @@ export default {
         };
     },
     methods: {
-        onSubmit() {
-            database.login(this.email, this.password);
+        async onSubmit() {
+            await database.login(this.email, this.password);
             this.$router.push("/");
         },
     },
+    computed: mapState({
+        logged: (state) => state.logged,
+    }),
     components: {
         Button,
+    },
+    updated() {
+        if (this.logged) this.$router.push("/");
     },
 };
 </script>
@@ -96,5 +106,9 @@ export default {
     .router-link {
         color: skyblue;
     }
+}
+
+.hidden {
+    display: none;
 }
 </style>

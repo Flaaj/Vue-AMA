@@ -9,7 +9,7 @@ export default {
     methods: {
         onClick() {
             try {
-                this.$emit("submitHandler");
+                this.$emit("click");
             } catch (err) {
                 console.log(err);
             }

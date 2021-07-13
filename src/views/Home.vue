@@ -8,6 +8,7 @@
 /* eslint-disable */
 import Layout from "@/layouts/Layout.vue";
 import QuestionList from "@/components/QuestionList.vue";
+
 import Store from "@/store";
 
 export default {
@@ -16,7 +17,8 @@ export default {
         QuestionList,
     },
     mounted() {
-        if (!Store.state.logged) this.$router.push("/login");
+        if (this.$route.path === "/" && !Store.state.logged)
+            this.$router.push("/login");
     },
 };
 </script>

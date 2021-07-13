@@ -1,5 +1,5 @@
 <template>
-    <div class="ama">
+    <div class="ama" v-if="user">
         <h2 class="heading">USER: {{ user.email }}</h2>
         <h1 class="title">Ask me anything!</h1>
         <form
@@ -42,8 +42,7 @@ export default defineComponent({
     },
     computed: mapState({
         userID(state) {
-            const idFromRoute =
-                this.$router.currentRoute.value.path.split("/")[2];
+            const idFromRoute = this.$route.path.split("/")[2];
             if (idFromRoute) return idFromRoute.replace("}", "");
             if (state.logged) return state.loggedUser.uid;
             return "";
