@@ -1,7 +1,12 @@
 <template>
     <div class="ama">
-        <h1 class="heading">Ask me anything!</h1>
-        <form class="form" @submit.prevent="askQuestion">
+        <h2 class="heading">USER: {{ user.email }}</h2>
+        <h1 class="title">Ask me anything!</h1>
+        <form
+            v-if="isLogged && !isCurrentUser"
+            class="form"
+            @submit.prevent="askQuestion"
+        >
             <input
                 class="input"
                 v-model="questionInput"
@@ -39,14 +44,24 @@ export default defineComponent({
         userID(state) {
             const idFromRoute =
                 this.$router.currentRoute.value.path.split("/")[2];
-            if (idFromRoute) return idFromRoute;
-            else if (state.logged) return state.loggedUser.uid;
+            if (idFromRoute) return idFromRoute.replace("}", "");
+            if (state.logged) return state.loggedUser.uid;
             return "";
         },
         questions(state) {
             return state.questions.filter(
                 (question) => question.askedTo === this.userID
             );
+        },
+        isLogged(state) {
+            return state.logged;
+        },
+        isCurrentUser(state) {
+            return state.logged && state.loggedUser.uid === this.userID;
+        },
+        user(state) {
+            console.log(state.users.find((user) => user.id === this.userID));
+            return state.users.find((user) => user.id === this.userID);
         },
     }),
     methods: {
@@ -82,8 +97,16 @@ export default defineComponent({
     }
 }
 
-.heading {
+.heading,
+.title {
     margin: 0 auto;
     display: inline-block;
+}
+
+.heading {
+    width: 100%;
+    text-align: center;
+    background: black;
+    color: white;
 }
 </style>

@@ -33,8 +33,8 @@ export default defineComponent({
     text-transform: uppercase;
     letter-spacing: 2px;
     margin-top: 0;
+    margin-bottom: 0;
 }
 .user-list {
-    margin-top: 30px;
 }
 </style>

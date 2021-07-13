@@ -1,11 +1,9 @@
 import { createRouter, createWebHashHistory, RouteRecordRaw } from "vue-router";
 import Home from "../views/Home.vue";
 import Login from "../views/Login.vue";
-import MyWall from "../views/MyWall.vue";
 import Users from "../views/Users.vue";
 import NewAccount from "../views/NewAccount.vue"
 import Account from "../views/Account.vue"
-import AnotherUser from "../views/AnotherUser.vue";
 
 const routes: Array<RouteRecordRaw> = [
   {

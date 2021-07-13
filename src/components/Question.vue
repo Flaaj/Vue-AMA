@@ -2,7 +2,11 @@
     <div class="wrapper">
         <p class="question">
             <span class="label">Question:</span> {{ questionData.question }}
-            <button class="delete" v-on:click="deleteThisQuestion">
+            <button
+                class="delete"
+                v-if="isCurrentUser"
+                v-on:click="deleteThisQuestion"
+            >
                 <i class="fa fa-trash" aria-hidden="true"></i>
             </button>
         </p>
@@ -12,7 +16,11 @@
         <div v-else class="answer-wrapper">
             <button
                 class="btn"
-                v-if="answerStatus === ANSWER.DOESNT_EXIST"
+                v-if="
+                    isLogged &&
+                    isCurrentUser &&
+                    answerStatus === ANSWER.DOESNT_EXIST
+                "
                 v-on:click="startAnswering"
             >
                 Answer this question
@@ -37,6 +45,7 @@
 <script>
 /* eslint-disable */
 import { defineComponent } from "@vue/runtime-core";
+import { mapState } from "vuex";
 // components
 import Button from "@/components/Button.vue";
 // database service
@@ -76,6 +85,21 @@ export default defineComponent({
             database.deleteQuestion(this.questionData.id);
         },
     },
+    computed: mapState({
+        userID(state) {
+            const idFromRoute =
+                this.$router.currentRoute.value.path.split("/")[2];
+            if (idFromRoute) return idFromRoute.replace("}", "");
+            if (state.logged) return state.loggedUser.uid;
+            return "";
+        },
+        isLogged(state) {
+            return state.logged;
+        },
+        isCurrentUser(state) {
+            return this.questionData.id === this.userID;
+        },
+    }),
     components: {
         Button,
     },

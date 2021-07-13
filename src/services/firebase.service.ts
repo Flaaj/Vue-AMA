@@ -15,8 +15,8 @@ export default {
 
     authStateListener() {
         firebase.auth().onAuthStateChanged((user) => {
-            Store.dispatch('login', user);
-        })
+            Store.dispatch("login", user);
+        });
     },
 
     getQuestions() {
@@ -54,6 +54,16 @@ export default {
             .signInWithEmailAndPassword(email, password)
             .then(({ user }) => Store.dispatch("login", user))
             .catch((err) => console.log(err));
+    },
+
+    logout() {
+        console.log("siema")
+        firebase
+            .auth()
+            .signOut()
+            .then(() => {
+                Store.dispatch("logout");
+            }).catch(err => console.log(err));
     },
 
     createUser(email: string, password: string) {

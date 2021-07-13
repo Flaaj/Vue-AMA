@@ -3,17 +3,17 @@
 </template>
 
 <script>
-import { defineComponent } from "@vue/runtime-core";
+/* eslint-disable */
 import database from "@/services/firebase.service";
 
-export default defineComponent({
+export default {
     mounted() {
         database.connect();
         database.authStateListener();
         database.getQuestions();
         database.getUsers();
     },
-});
+};
 </script>
 
 <style lang="scss">

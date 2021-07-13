@@ -1,6 +1,6 @@
 <template>
     <div class="user-item">
-        <router-link :to="`/users/${user.id}}`">
+        <router-link class="link" :to="`/users/${user.id}}`">
             {{ user.email }}
             <span v-if="isCurrentUser">(you)</span>
         </router-link>
@@ -24,7 +24,19 @@ export default {
 
 <style scoped lang="scss">
 .user-item {
-    border: 1px solid black;
     padding: 10px 20px;
+
+    &:nth-child(even) {
+        background: rgba(#efefef, 0.3);
+    }
+
+    .link {
+        color: black;
+        text-decoration: none;
+
+        &:hover {
+            text-decoration: underline;
+        }
+    }
 }
 </style>
